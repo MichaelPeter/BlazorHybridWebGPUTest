@@ -12,6 +12,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Notes.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Notes.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 

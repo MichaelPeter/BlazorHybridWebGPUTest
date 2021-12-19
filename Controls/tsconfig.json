@@ -4,9 +4,10 @@
 
     //"module": "commonjs", /* Specify what module code is generated. */
 
-    "module": "ESNext",
-    "target": "ES6",
-    "moduleResolution": "node",
+    //"module": "ESNext",
+    "module": "AMD",
+    "target": "ES2020",
+    "moduleResolution": "Node",
 
     "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
     "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
@@ -14,14 +15,11 @@
     "strictNullChecks": true,
 
     "rootDir": "typescript",
-    "outDir": "wwwroot/js"
+    "outDir": "wwwroot/js",
 
-    //"types": [
-    //  "babylonjs"
-    //]
-
-    //"typeRoots": [
-    //  "node_modules"
-    //]
+    "types": [
+      "babylonjs",
+      "babylonjs-materials"
+    ]
   }
 }

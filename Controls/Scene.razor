@@ -11,7 +11,7 @@
     {
         if (firstRender)
         {
-            await JsRuntime.InvokeVoidAsync("startEngineStatic", new Object[] { _canvasRef });
+            await JsRuntime.InvokeVoidAsync("BabylonRenderer.startEngineStatic", new Object[] { _canvasRef });
         }
     }
 }

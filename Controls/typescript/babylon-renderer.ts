@@ -1,34 +1,29 @@
-﻿//import "@babylonjs/core/Debug/debugLayer";
-//import "@babylonjs/inspector";
-//import "@babylonjs/loaders/glTF";
-//import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, Color3, FreeCamera } from "@babylonjs/core";
-//import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, Color3, FreeCamera, PBRMaterial } from "@babylonjs/core";
+﻿import * as BABYLON from 'babylonjs';
+
+//import { Engine } from "@babylonjs/core/Engines/engine";
+//import { Scene } from "@babylonjs/core/scene";
+//import { Color3, Vector3 } from "@babylonjs/core/Maths/math";
+//import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
+//import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+//import { Mesh } from "@babylonjs/core/Meshes/mesh";
+//import { MeshBuilder, PBRMaterial } from "@babylonjs/core";
+//import { GridMaterial } from "@babylonjs/materials/grid";
+//import "@babylonjs/core/Meshes/meshBuilder";
 
 // Required side effects to populate the Create methods on the mesh class. Without this, the bundle would be smaller but the createXXX methods from mesh would not be accessible.
-import "@babylonjs/core/Meshes/meshBuilder";
-
-import { Engine } from "@babylonjs/core/Engines/engine";
-import { Scene } from "@babylonjs/core/scene";
-import { Color3, Vector3 } from "@babylonjs/core/Maths/math";
-import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
-import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
-import { Mesh } from "@babylonjs/core/Meshes/mesh";
-import { MeshBuilder, PBRMaterial } from "@babylonjs/core";
-import { GridMaterial } from "@babylonjs/materials/grid";
 
 export class BabylonRenderer {
 
     public static startEngineStatic(canvas: HTMLCanvasElement) {
         let renderer = new BabylonRenderer();
-        renderer.startEngine(canvas);
-        return renderer;
+        renderer.startEngine(canvas); 
+        return renderer;  
     }
 
     constructor() {
-
     }
 
-    public engine: Engine | null = null;
+    public engine: BABYLON.Engine | null = null;
 
     public startEngine(canvas: HTMLCanvasElement) {
 
@@ -36,7 +31,7 @@ export class BabylonRenderer {
             throw new Error("No canvas was passed to init engine.");
 
         //const canvas = document.getElementById(canvasId);
-        this.engine = new Engine(canvas, true);
+        this.engine = new BABYLON.Engine(canvas, true);
  
         var scene = this.createScene(this.engine, canvas); 
 
@@ -50,47 +45,47 @@ export class BabylonRenderer {
         // Watch for browser/canvas resize events
         window.addEventListener("resize", function () {
             me.engine!.resize();
-        });
+        }); 
     }
 
-    private createScene(engine: Engine, canvas: HTMLCanvasElement) {
+    private createScene(engine: BABYLON.Engine, canvas: HTMLCanvasElement) {
 
         // This creates a basic Babylon Scene object (non-mesh)
-        var scene = new Scene(engine);
+        var scene = new BABYLON.Scene(engine);
 
         // Modification
-        scene.ambientColor = new Color3(1, 1, 1);
+        scene.ambientColor = new BABYLON.Color3(1, 1, 1);
 
         // This creates and positions a free camera (non-mesh)
-        var camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
+        var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
 
         // This targets the camera to scene origin
-        camera.setTarget(Vector3.Zero());
+        camera.setTarget(BABYLON.Vector3.Zero());
 
         // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
 
         // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
-        var light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+        var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
         // Default intensity is 1. Let's dim the light a small amount
         light.intensity = 0.7;
 
         function createSphere(xPosition : number, isGreen : boolean) {
 
-            let redPart = isGreen ? 0 : 1;
+            let redPart = isGreen ? 0 : 1; 
             let greenPart = isGreen ? 1 : 0
 
             let matName = "mat" + xPosition;
 
-            var mat = new PBRMaterial(matName, scene);
+            var mat = new BABYLON.PBRMaterial(matName, scene);
             //mat.diffuseColor = new Color3(1, 0, 1);
             //mat.specularColor = new Color3(0.5, 0.6, 0.87);
-            mat.emissiveColor = new Color3(redPart, greenPart, 0);
-            mat.ambientColor = new Color3(0.23, 0.98, 0.53);
+            mat.emissiveColor = new BABYLON.Color3(redPart, greenPart, 0);
+            mat.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
 
             // Our built-in 'sphere' shape.
-            var sphere = MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
+            var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
 
             // Move the sphere upward 1/2 its height
             sphere.position.x = xPosition;
@@ -104,7 +99,7 @@ export class BabylonRenderer {
         createSphere(3, false);
 
         // Our built-in 'ground' shape.
-        var ground = MeshBuilder.CreateGround("ground", { width: 8, height: 8 }, scene);
+        var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 8, height: 8 }, scene);
 
         return scene;
     }
