@@ -1,26 +1,27 @@
-﻿import * as BABYLON from 'babylonjs';
+﻿/// <reference path="babylonjs">
 
-//import { Engine } from "@babylonjs/core/Engines/engine";
-//import { Scene } from "@babylonjs/core/scene";
-//import { Color3, Vector3 } from "@babylonjs/core/Maths/math";
-//import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
-//import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
-//import { Mesh } from "@babylonjs/core/Meshes/mesh";
-//import { MeshBuilder, PBRMaterial } from "@babylonjs/core";
-//import { GridMaterial } from "@babylonjs/materials/grid";
-//import "@babylonjs/core/Meshes/meshBuilder";
 
-// Required side effects to populate the Create methods on the mesh class. Without this, the bundle would be smaller but the createXXX methods from mesh would not be accessible.
 
-export class BabylonRenderer {
 
-    public static startEngineStatic(canvas: HTMLCanvasElement) {
-        let renderer = new BabylonRenderer();
-        renderer.startEngine(canvas); 
-        return renderer;  
+// Blazor does not support static method calling directly, so we need a workarround over window class
+// https://stackoverflow.com/questions/58888300/how-to-call-a-static-javascript-method-from-blazor-c-sharp-code
+(function () {
+     (<any>window).BabylonRenderer = {
+        startEngineStatic: function (canvas: HTMLCanvasElement) {
+            return BabylonRenderer.startEngineStatic(canvas)
+        }
+    };
+})();
+
+class BabylonRenderer {
+    constructor() {
     }
 
-    constructor() {
+    
+    static startEngineStatic = function (canvas: HTMLCanvasElement) {
+        let renderer = new BabylonRenderer();
+        renderer.startEngine(canvas);
+        return renderer;
     }
 
     public engine: BABYLON.Engine | null = null;
@@ -29,6 +30,13 @@ export class BabylonRenderer {
 
         if (!canvas)
             throw new Error("No canvas was passed to init engine.");
+
+        // set canvas size this is for some reason problmatic in css
+        // https://stackoverflow.com/questions/10214873/make-canvas-as-wide-and-as-high-as-parent
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
 
         //const canvas = document.getElementById(canvasId);
         this.engine = new BABYLON.Engine(canvas, true);

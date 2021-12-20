@@ -5,10 +5,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
+  
   <PropertyGroup>
     <!-- Make wwwroot items appear directly under localhost-->
     <StaticWebAssetBasePath Condition="$(StaticWebAssetBasePath) == ''">/</StaticWebAssetBasePath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EnableTypeScript>true</EnableTypeScript>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,9 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\js\babylon-renderer.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\js\babylon.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

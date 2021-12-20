@@ -1,11 +1,12 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     //"module": "commonjs", /* Specify what module code is generated. */
 
     //"module": "ESNext",
-    "module": "AMD",
+    "module": "None",
     "target": "ES2020",
     "moduleResolution": "Node",
 
