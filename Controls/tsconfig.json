@@ -17,6 +17,7 @@
 
     "rootDir": "typescript",
     "outDir": "wwwroot/js",
+    "outFile": "wwwroot/js/renderbundle.js",
 
     "types": [
       "babylonjs",

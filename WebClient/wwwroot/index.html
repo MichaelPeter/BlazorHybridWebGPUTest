@@ -9,11 +9,11 @@
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="BlazorHybridWebGPUTest.Client.styles.css" rel="stylesheet" />
-
-    
 </head>
 
-<body>
+<!-- Added overflow hidden to hide scrollbars, since the body is a bit too big -->
+<body style="overflow: hidden;">
+
     <div id="app">Loading...</div>
 
     <div id="blazor-error-ui">
@@ -21,10 +21,26 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="_framework/blazor.webassembly.js"></script>
+
+    <!-- In a server side project the _Hosts.cshtml could be used...-->
+    <script id="blazor-engine-script"></script>
+    <script>
+        const isWebView = false;
+        let engineScript = document.getElementById('blazor-engine-script');
+        let enginePath;
+
+        if (isWebView) {
+            enginePath = "_framework/blazor.webview.js"
+            
+        } else {
+            enginePath = "_framework/blazor.webassembly.js";
+        }
+        engineScript.setAttribute('src', enginePath);
+
+    </script>
 
     <script src="js/babylon.js"></script>
-    <script src="js/babylon-renderer.js" type="module"></script>
+    <script src="js/renderbundle.js" type="module"></script>
 </body>
 
 </html>

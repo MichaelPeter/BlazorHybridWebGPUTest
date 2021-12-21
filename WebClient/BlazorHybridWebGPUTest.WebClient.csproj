@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Controls\BlazorHybridWebGPUTest.Controls.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
 </Project>

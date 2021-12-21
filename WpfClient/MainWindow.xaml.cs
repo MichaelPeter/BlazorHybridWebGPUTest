@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,10 @@ namespace BlazorHybridWebGPUTest.WpfClient
     {
         public MainWindow()
         {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddBlazorWebView();
+            Resources.Add("services", serviceCollection.BuildServiceProvider());
+
             InitializeComponent();
         }
     }
