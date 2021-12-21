@@ -8,4 +8,7 @@
             return BabylonRenderer.startEngineStatic(canvas)
         }
     };
+    (<any>window).getCurrentUrl = function (): string {
+        return window.location.href;
+    };
 })(); 

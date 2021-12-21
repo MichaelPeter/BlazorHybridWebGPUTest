@@ -25,7 +25,9 @@
     <!-- In a server side project the _Hosts.cshtml could be used...-->
     <script id="blazor-engine-script"></script>
     <script>
-        const isWebView = false;
+        // TODO: Find better way to dedect webview2 or inject info
+        const isWebView = window.location.href.indexOf("0.0.0.0") != -1;
+
         let engineScript = document.getElementById('blazor-engine-script');
         let enginePath;
 

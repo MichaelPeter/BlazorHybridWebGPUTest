@@ -80,4 +80,7 @@ BabylonRenderer.startEngineStatic = function (canvas) {
             return BabylonRenderer.startEngineStatic(canvas);
         }
     };
+    window.getCurrentUrl = function () {
+        return window.location.href;
+    };
 })();

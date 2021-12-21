@@ -1,6 +1,17 @@
-﻿
+﻿@inject IJSRuntime JS
 
-<label>Click the Spheres to select them.</label>
+<label>Click the Spheres to select them. @(_url) </label>
 <div style="width: 100%; height: 98vh">
     <Scene></Scene>
 </div>
+
+@code {
+    private string? _url = null;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _url = await JS.InvokeAsync<string>("getCurrentUrl");
+
+        StateHasChanged();
+    }
+}
