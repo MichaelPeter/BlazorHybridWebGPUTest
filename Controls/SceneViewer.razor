@@ -10,8 +10,10 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _url = await JS.InvokeAsync<string>("getCurrentUrl");
-
-        StateHasChanged();
+        if (firstRender)
+        {
+            _url = await JS.InvokeAsync<string>("blazorGetCurrentUrl");
+            StateHasChanged();
+        }   
     }
 }

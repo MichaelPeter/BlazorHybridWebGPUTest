@@ -77,10 +77,10 @@ BabylonRenderer.startEngineStatic = function (canvas) {
 (function () {
     window.BabylonRenderer = {
         startEngineStatic: function (canvas) {
-            return BabylonRenderer.startEngineStatic(canvas);
+            return new BabylonRenderer().startEngine(canvas);
         }
     };
-    window.getCurrentUrl = function () {
+    window.blazorGetCurrentUrl = function () {
         return window.location.href;
     };
 })();

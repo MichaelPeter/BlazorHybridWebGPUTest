@@ -5,10 +5,10 @@
 (function () {
     (<any>window).BabylonRenderer = {
         startEngineStatic: function (canvas: HTMLCanvasElement) {
-            return BabylonRenderer.startEngineStatic(canvas)
+            return new BabylonRenderer().startEngine(canvas)
         }
     };
-    (<any>window).getCurrentUrl = function (): string {
+    (<any>window).blazorGetCurrentUrl = function (): string {
         return window.location.href;
     };
 })(); 
