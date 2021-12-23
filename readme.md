@@ -10,6 +10,28 @@ WebView2 uses here preview builds of Edge Canary.
 Since WebGPU is a evolving standard for fallback reasons the babylon.js api
 is used which starting with 5.0.0.0 preview supports WebGPU with a WebGL fallback.
 
+## Getting started
+
+- Goto the BlazorHybridWebGPUTest.Controls project
+- execute *npm install* for the typescript depencenties
+
+### A: For Browser Usage:
+
+##### For Testing WebGPU
+
+- Install Edge Canary or Chrome Canary
+- goto edge://flags or chrome://flags
+- Activate: Unsafe WebGPU
+- Restart the Browser
+
+Start Project 
+BlazorHybridWebGPUTest.Server
+
+### B: For WPF Usage:
+
+Start Project
+BlazorHybridWebGPUTest.WpfClient
+
 ## Technologies demonstrated
 - ASP.NET Core 6
 - Blazor Webassembly
