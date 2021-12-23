@@ -1,9 +1,16 @@
 "use strict";
 /// <reference path="babylonjs">
 /// <reference path="StartEngineResult.ts">
+/// <reference path="SceneCallback.ts">
 class BabylonRenderer {
-    constructor() {
+    constructor(dotnetInterop) {
         this.engine = null;
+        this.startEngineResult = null;
+        this.sceneCallback = new SceneCallback(dotnetInterop);
+    }
+    // For some reason blazor had here problems with promise return values.
+    beginStartEngine(canvas) {
+        this.startEngine(canvas);
     }
     async startEngine(canvas) {
         if (!canvas)
@@ -34,11 +41,21 @@ class BabylonRenderer {
         window.addEventListener("resize", function () {
             me.engine.resize();
         });
-        return new StartEngineResult(webGpuSupported, webGpuUsed);
+        this.startEngineResult = new StartEngineResult(webGpuSupported, webGpuUsed);
+        this.sceneCallback.EngineStartComplete(this.startEngineResult);
+        return this.startEngineResult;
+    }
+    //public getStartEngineResult(): StartEngineResult {
+    //    if (!this.startEngineResult)
+    //        throw new Error("Engine has not been started")
+    //    return this.startEngineResult;
+    //}
+    checkEngineStarted() {
+        if (this.engine == null)
+            throw new Error("Engine has not been started yet.");
     }
     getFps() {
-        if (this.engine == null)
-            throw new Error("Engine not yet started");
+        this.checkEngineStarted();
         return this.engine.getFps();
     }
     createScene(engine, canvas) {
@@ -81,30 +98,31 @@ class BabylonRenderer {
         return scene;
     }
 }
-BabylonRenderer.startEngineStatic = function (canvas) {
-    let renderer = new BabylonRenderer();
-    renderer.startEngine(canvas);
-    return renderer;
-};
 /// <reference path="babylon-renderer.ts">
 /// <reference path="StartEngineResult.ts">
 var _blazorRender = null;
 // Blazor does not support static method calling directly, so we need a workarround over window class
 // https://stackoverflow.com/questions/58888300/how-to-call-a-static-javascript-method-from-blazor-c-sharp-code
 (function () {
-    window.BabylonRenderer = {
-        startEngineStatic: async function (canvas) {
-            _blazorRender = new BabylonRenderer();
-            return _blazorRender.startEngine(canvas);
-        }
+    //(<any>window).BabylonRenderer = {
+    //    startEngineStatic: function (canvas: HTMLCanvasElement): Promise<StartEngineResult> {
+    //        _blazorRender = new BabylonRenderer();
+    //        let result: Promise<StartEngineResult> = _blazorRender.startEngine(canvas)
+    //        return result;
+    //    }
+    //};
+    window.newRenderEngine = function (dotnetInterop) {
+        return new BabylonRenderer(dotnetInterop);
     };
-    window.getFps = function () {
-        if (_blazorRender == null)
-            throw new Error("Engine not yet initialized");
-        return _blazorRender.getFps();
-    };
+    //(<any>window).getFps = function (): number {
+    //    if (_blazorRender == null)
+    //        throw new Error("Engine not yet initialized");
+    //    return _blazorRender!.getFps();
+    //};
     window.blazorGetCurrentUrl = function () {
         return window.location.href;
+    };
+    window.checkJsObj = function (obj) {
     };
 })();
 /// <reference path="babylon-renderer.ts">
@@ -112,5 +130,14 @@ class StartEngineResult {
     constructor(webGpuSupported, webGpuUsed) {
         this.webGpuSupported = webGpuSupported;
         this.webGpuUsed = webGpuUsed;
+    }
+}
+/// <reference path="StartEngineResult.ts">
+class SceneCallback {
+    constructor(dotnetInterop) {
+        this.dotnetInterop = dotnetInterop;
+    }
+    EngineStartComplete(result) {
+        return this.dotnetInterop.invokeMethodAsync("EngineStartComplete");
     }
 }

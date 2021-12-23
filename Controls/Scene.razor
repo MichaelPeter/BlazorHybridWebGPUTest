@@ -1,25 +1,68 @@
 ﻿@inject IJSRuntime JsRuntime
+@implements IDisposable
 
 <canvas class="render-canvas" @ref="_canvasRef">
 
 </canvas>
+<label>@_error</label>
 
 @code {
     private ElementReference _canvasRef;
 
+    private string? _error;
+
     [Parameter]
     public EventCallback<StartEngineResult> EngineStarted { get; set; }
+
+    private IJSObjectReference? _renderEngine;
+
+    private DotNetObjectReference<SceneCallback>? _thisReference;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            StartEngineResult result = await JsRuntime.InvokeAsync<StartEngineResult>("BabylonRenderer.startEngineStatic", new Object[] { _canvasRef });
-            if(EngineStarted.HasDelegate)
+            try
             {
-                await EngineStarted.InvokeAsync(result);
+                _thisReference = DotNetObjectReference.Create(new SceneCallback(this));
+
+                _renderEngine = await JsRuntime.InvokeAsync<IJSObjectReference>("newRenderEngine", new Object[] { _thisReference });
+                //IJSObjectReference resultRef = await _renderEngine.InvokeAsync<IJSObjectReference>("startEngine", new Object[] { _canvasRef });
+                //StartEngineResult result = await _renderEngine.InvokeAsync<StartEngineResult>("startEngine", new Object[] { _canvasRef });
+
+                // For some reason the return value in a promise could not be read from .net so a second method had to be defined
+                await _renderEngine.InvokeVoidAsync("beginStartEngine", new Object[] { _canvasRef });
+
+                //StartEngineResult result = await _renderEngine.InvokeAsync<StartEngineResult>("getStartEngineResult");
+
+                //await _renderEngine.InvokeVoidAsync("startEngine", new Object[] { _canvasRef });
+                //await JsRuntime.InvokeVoidAsync("checkJsObj", new object[] { resultRef });
+
+                //StartEngineResult result = new StartEngineResult();
+
+                //StartEngineResult result = await JsRuntime.InvokeAsync<StartEngineResult>("BabylonRenderer.startEngineStatic", new Object[] { _canvasRef });
+                //var result = await JsRuntime.InvokeAsync<IJSObjectReference >("BabylonRenderer.startEngineStatic", new Object[] { _canvasRef });
+                //result
+            }
+            catch (Exception ex)
+            {
+                _error = ex.ToString();
             }
         }
+    }
+
+    internal async Task EngineStartedAsync(StartEngineResult startResult)
+    {
+        //StateHasChanged();
+        if (EngineStarted.HasDelegate)
+        {
+            await EngineStarted.InvokeAsync(startResult);
+        }
+    }
+
+    public void Dispose()
+    {
+        _thisReference?.Dispose();
     }
 }
 

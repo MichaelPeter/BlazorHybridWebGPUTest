@@ -1,18 +1,20 @@
 ﻿/// <reference path="babylonjs">
 /// <reference path="StartEngineResult.ts">
+/// <reference path="SceneCallback.ts">
 
 class BabylonRenderer {
-    constructor() {
+    constructor(dotnetInterop: any) {
+        this.sceneCallback = new SceneCallback(dotnetInterop);
     }
-
     
-    static startEngineStatic = function (canvas: HTMLCanvasElement) {
-        let renderer = new BabylonRenderer();
-        renderer.startEngine(canvas);
-        return renderer;
-    }
-
     public engine: BABYLON.Engine | null = null;
+    public startEngineResult: StartEngineResult | null = null;
+    public sceneCallback: SceneCallback
+
+    // For some reason blazor had here problems with promise return values.
+    public beginStartEngine(canvas: HTMLCanvasElement) {
+        this.startEngine(canvas);
+    }
 
     public async startEngine(canvas: HTMLCanvasElement): Promise<StartEngineResult> {
 
@@ -51,14 +53,27 @@ class BabylonRenderer {
             me.engine!.resize();
         }); 
 
-        return new StartEngineResult(webGpuSupported, webGpuUsed)   
+        this.startEngineResult = new StartEngineResult(webGpuSupported, webGpuUsed)
+        this.sceneCallback.EngineStartComplete(this.startEngineResult);
+        return this.startEngineResult;
+    }
+
+    //public getStartEngineResult(): StartEngineResult {
+    //    if (!this.startEngineResult)
+    //        throw new Error("Engine has not been started")
+
+    //    return this.startEngineResult;
+    //}
+
+    private checkEngineStarted() : void {
+        if (this.engine == null)
+            throw new Error("Engine has not been started yet.");
     }
 
     public getFps(): number {
-        if (this.engine == null)
-            throw new Error("Engine not yet started");
+        this.checkEngineStarted();
 
-        return this.engine.getFps();
+        return this.engine!.getFps();
     }
 
     private createScene(engine: BABYLON.Engine, canvas: HTMLCanvasElement) {

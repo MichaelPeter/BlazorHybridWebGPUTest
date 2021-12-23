@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JS
 
 <label>Click the Spheres to select them. @(_url) </label>
-<label>SupportsWebGPU: @(_startEngineResult?.webGpuSupported) WebGPUUsed: @(_startEngineResult?.webGpuUsed) </label>
+<label>SupportsWebGPU: @(DisplyBool(_startEngineResult?.WebGpuSupported)) WebGPUUsed: @(DisplyBool(_startEngineResult?.WebGpuUsed)) </label>
 <div style="width: 100%; height: 98vh">
     <Scene EngineStarted="@OnEngineStarted"></Scene>
 </div>
@@ -25,4 +25,6 @@
         _startEngineResult = startEngineResult;
         StateHasChanged();
     }
+
+    private string DisplyBool(bool? b) => b == true ? "Yes" : b == false ? "No" : "Loading...";
 }

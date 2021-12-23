@@ -18,7 +18,7 @@ namespace BlazorHybridWebGPUTest.Controls.TypeMappings
 
         }
 
-        public bool webGpuSupported { get; set; } = false;
-        public bool webGpuUsed { get; set; } = false;
+        public bool WebGpuSupported { get; set; } = false;
+        public bool WebGpuUsed { get; set; } = false;
     }
 }
