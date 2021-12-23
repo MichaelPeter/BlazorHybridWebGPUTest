@@ -7,12 +7,18 @@
 @code {
     private ElementReference _canvasRef;
 
+    [Parameter]
+    public EventCallback<StartEngineResult> EngineStarted { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JsRuntime.InvokeVoidAsync("BabylonRenderer.startEngineStatic", new Object[] { _canvasRef });
-            
+            StartEngineResult result = await JsRuntime.InvokeAsync<StartEngineResult>("BabylonRenderer.startEngineStatic", new Object[] { _canvasRef });
+            if(EngineStarted.HasDelegate)
+            {
+                await EngineStarted.InvokeAsync(result);
+            }
         }
     }
 }

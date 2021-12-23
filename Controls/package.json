@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babylonjs": "5.0.0-alpha.64",
-    "babylonjs-materials": "^5.0.0-alpha.64"
+    "babylonjs": "5.0.0-alpha.65",
+    "babylonjs-materials": "5.0.0-alpha.65"
   }
 }

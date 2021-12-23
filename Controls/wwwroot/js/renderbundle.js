@@ -1,10 +1,11 @@
 "use strict";
 /// <reference path="babylonjs">
+/// <reference path="StartEngineResult.ts">
 class BabylonRenderer {
     constructor() {
         this.engine = null;
     }
-    startEngine(canvas) {
+    async startEngine(canvas) {
         if (!canvas)
             throw new Error("No canvas was passed to init engine.");
         // set canvas size this is for some reason problmatic in css
@@ -13,8 +14,16 @@ class BabylonRenderer {
         canvas.style.height = '100%';
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
-        //const canvas = document.getElementById(canvasId);
-        this.engine = new BABYLON.Engine(canvas, true);
+        let webGpuSupported = await BABYLON.WebGPUEngine.IsSupportedAsync;
+        let webGpuUsed = webGpuSupported;
+        if (webGpuUsed) {
+            var eng = new BABYLON.WebGPUEngine(canvas);
+            await eng.initAsync();
+            this.engine = eng;
+        }
+        else {
+            this.engine = new BABYLON.Engine(canvas, true /* Antialias*/);
+        }
         var scene = this.createScene(this.engine, canvas);
         // Register a render loop to repeatedly render the scene
         this.engine.runRenderLoop(function () {
@@ -25,6 +34,12 @@ class BabylonRenderer {
         window.addEventListener("resize", function () {
             me.engine.resize();
         });
+        return new StartEngineResult(webGpuSupported, webGpuUsed);
+    }
+    getFps() {
+        if (this.engine == null)
+            throw new Error("Engine not yet started");
+        return this.engine.getFps();
     }
     createScene(engine, canvas) {
         // This creates a basic Babylon Scene object (non-mesh)
@@ -72,15 +87,30 @@ BabylonRenderer.startEngineStatic = function (canvas) {
     return renderer;
 };
 /// <reference path="babylon-renderer.ts">
+/// <reference path="StartEngineResult.ts">
+var _blazorRender = null;
 // Blazor does not support static method calling directly, so we need a workarround over window class
 // https://stackoverflow.com/questions/58888300/how-to-call-a-static-javascript-method-from-blazor-c-sharp-code
 (function () {
     window.BabylonRenderer = {
-        startEngineStatic: function (canvas) {
-            return new BabylonRenderer().startEngine(canvas);
+        startEngineStatic: async function (canvas) {
+            _blazorRender = new BabylonRenderer();
+            return _blazorRender.startEngine(canvas);
         }
+    };
+    window.getFps = function () {
+        if (_blazorRender == null)
+            throw new Error("Engine not yet initialized");
+        return _blazorRender.getFps();
     };
     window.blazorGetCurrentUrl = function () {
         return window.location.href;
     };
 })();
+/// <reference path="babylon-renderer.ts">
+class StartEngineResult {
+    constructor(webGpuSupported, webGpuUsed) {
+        this.webGpuSupported = webGpuSupported;
+        this.webGpuUsed = webGpuUsed;
+    }
+}

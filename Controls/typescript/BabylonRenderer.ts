@@ -1,4 +1,5 @@
 ﻿/// <reference path="babylonjs">
+/// <reference path="StartEngineResult.ts">
 
 class BabylonRenderer {
     constructor() {
@@ -13,7 +14,7 @@ class BabylonRenderer {
 
     public engine: BABYLON.Engine | null = null;
 
-    public startEngine(canvas: HTMLCanvasElement) {
+    public async startEngine(canvas: HTMLCanvasElement): Promise<StartEngineResult> {
 
         if (!canvas)
             throw new Error("No canvas was passed to init engine.");
@@ -25,9 +26,17 @@ class BabylonRenderer {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
 
-        //const canvas = document.getElementById(canvasId);
-        this.engine = new BABYLON.Engine(canvas, true);
- 
+        let webGpuSupported = await BABYLON.WebGPUEngine.IsSupportedAsync;
+        let webGpuUsed = webGpuSupported;
+
+        if (webGpuUsed) {
+            var eng = new BABYLON.WebGPUEngine(canvas)
+            await eng.initAsync();
+            this.engine = eng;
+        } else {
+            this.engine = new BABYLON.Engine(canvas, true /* Antialias*/);
+        }
+
         var scene = this.createScene(this.engine, canvas); 
 
         // Register a render loop to repeatedly render the scene
@@ -41,6 +50,15 @@ class BabylonRenderer {
         window.addEventListener("resize", function () {
             me.engine!.resize();
         }); 
+
+        return new StartEngineResult(webGpuSupported, webGpuUsed)   
+    }
+
+    public getFps(): number {
+        if (this.engine == null)
+            throw new Error("Engine not yet started");
+
+        return this.engine.getFps();
     }
 
     private createScene(engine: BABYLON.Engine, canvas: HTMLCanvasElement) {
