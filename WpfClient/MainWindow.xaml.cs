@@ -38,8 +38,6 @@ namespace BlazorHybridWebGPUTest.WpfClient
         private void OnOpenDeveloperConsole(object sender, RoutedEventArgs e)
         {
             BlazorWebView.WebView.CoreWebView2.OpenDevToolsWindow();
-
-            BlazorWebView.WebView.CoreWebView2.v
         }
 
         
