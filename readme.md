@@ -65,3 +65,14 @@ BlazorHybridWebGPUTest.WpfClient
 
 Unreal Engine 4 already supports HTML5 https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/HTML5/
 There are movments to support WebGPU in Unreal Engine 5 or HTML5 in general https://forums.unrealengine.com/t/ue5-and-the-html5-platform/237070
+
+## Issues with WebGPU
+
+When Initalizing the bablyon.js engine with WebGPU and trying to make a callback 
+to Blazor from the same Javascript "Call" or returning a value the dotnet engine runs into an error.
+This was not yet deeply investigated, but does not happen with WebGL.
+
+Attepts to solve the callback with calling the callback from a setTimer() call did not solve the issue.
+
+See Also issue here:
+https://github.com/dotnet/aspnetcore/issues/39173
