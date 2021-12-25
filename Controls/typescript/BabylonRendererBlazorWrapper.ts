@@ -1,5 +1,5 @@
 ﻿/// <reference path="babylon-renderer.ts">
-/// <reference path="StartEngineResult.ts">
+/// <reference path="UsedEngineInfo.ts">
 
 var _blazorRender: BabylonRenderer | null  = null;
 
@@ -26,7 +26,11 @@ var _blazorRender: BabylonRenderer | null  = null;
         return window.location.href;
     };
 
-    (<any>window).checkJsObj = function(obj : any) {
-
+    // For some reason here blazor needs to register window functions
+    (<any>window).getIsWebView = function () {
+        // this variable is set in index.html, thats why ignore the error
+        // @ts-ignore:
+        return isWebView;
     }
+
 })(); 

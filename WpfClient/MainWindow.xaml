@@ -8,7 +8,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <blazor:BlazorWebView TabIndex="1" IsTabStop="True" Grid.Row="1" HostPage="wwwroot/index.html" Services="{StaticResource services}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="File" Margin="0,0,0,3">
+                <MenuItem Header="Exit" Click="OnExitClick" />
+            </MenuItem>
+
+            <MenuItem Header="Developer">
+                <MenuItem Header="Open Developer Console" Click="OnOpenDeveloperConsole" />
+            </MenuItem>
+        </Menu>
+
+        <blazor:BlazorWebView Grid.Row="1" x:Name="BlazorWebView" TabIndex="1" IsTabStop="True" HostPage="wwwroot/index.html" Services="{StaticResource services}">
             <blazor:BlazorWebView.RootComponents>
                 <blazor:RootComponent Selector="#app" ComponentType="{x:Type local:WebViewRoot}" />
             </blazor:BlazorWebView.RootComponents>

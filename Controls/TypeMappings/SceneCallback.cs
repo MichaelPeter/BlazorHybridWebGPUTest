@@ -19,7 +19,7 @@ namespace BlazorHybridWebGPUTest.Controls.TypeMappings
         [JSInvokable]
         public async Task EngineStartComplete()
         {
-            await Scene.EngineStartedAsync(new StartEngineResult());
+            await Scene.EngineStartedAsync(new UsedEngineInfo());
         }
     }
 }

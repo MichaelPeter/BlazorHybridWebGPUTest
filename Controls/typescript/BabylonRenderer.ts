@@ -1,5 +1,5 @@
 ﻿/// <reference path="babylonjs">
-/// <reference path="StartEngineResult.ts">
+/// <reference path="UsedEngineInfo.ts">
 /// <reference path="SceneCallback.ts">
 
 class BabylonRenderer {
@@ -8,15 +8,24 @@ class BabylonRenderer {
     }
     
     public engine: BABYLON.Engine | null = null;
-    public startEngineResult: StartEngineResult | null = null;
+    public usedEngineInfo: UsedEngineInfo | null = null;
     public sceneCallback: SceneCallback
+    public webGpuUsed: boolean | null = null;
 
     // For some reason blazor had here problems with promise return values.
     public beginStartEngine(canvas: HTMLCanvasElement) {
         this.startEngine(canvas);
     }
 
-    public async startEngine(canvas: HTMLCanvasElement): Promise<StartEngineResult> {
+    // needs to be seperated call since dotnet-blazor has problems getting return values from begin start engine or startEngine.
+    public async initializeEngine() {
+        let webGpuSupported = await BABYLON.WebGPUEngine.IsSupportedAsync;
+        this.webGpuUsed = webGpuSupported;
+        this.usedEngineInfo = new UsedEngineInfo(webGpuSupported, this.webGpuUsed)
+        return this.usedEngineInfo;
+    }
+
+    public async startEngine(canvas: HTMLCanvasElement): Promise<UsedEngineInfo> {
 
         if (!canvas)
             throw new Error("No canvas was passed to init engine.");
@@ -28,10 +37,7 @@ class BabylonRenderer {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
 
-        let webGpuSupported = await BABYLON.WebGPUEngine.IsSupportedAsync;
-        let webGpuUsed = webGpuSupported;
-
-        if (webGpuUsed) {
+        if (this.webGpuUsed) {
             var eng = new BABYLON.WebGPUEngine(canvas)
             await eng.initAsync();
             this.engine = eng;
@@ -53,17 +59,17 @@ class BabylonRenderer {
             me.engine!.resize();
         }); 
 
-        this.startEngineResult = new StartEngineResult(webGpuSupported, webGpuUsed)
-        this.sceneCallback.EngineStartComplete(this.startEngineResult);
-        return this.startEngineResult;
+        // do not call this since dotnet has a problem with webgpu
+        //this.sceneCallback.EngineStartComplete(this.usedEngineInfo!);
+        return this.usedEngineInfo!;
     }
 
-    //public getStartEngineResult(): StartEngineResult {
-    //    if (!this.startEngineResult)
-    //        throw new Error("Engine has not been started")
+    public getStartEngineResult(): UsedEngineInfo {
+        if (!this.usedEngineInfo)
+            throw new Error("Engine has not been started")
 
-    //    return this.startEngineResult;
-    //}
+        return this.usedEngineInfo;
+    }
 
     private checkEngineStarted() : void {
         if (this.engine == null)

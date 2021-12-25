@@ -1,16 +1,24 @@
 "use strict";
 /// <reference path="babylonjs">
-/// <reference path="StartEngineResult.ts">
+/// <reference path="UsedEngineInfo.ts">
 /// <reference path="SceneCallback.ts">
 class BabylonRenderer {
     constructor(dotnetInterop) {
         this.engine = null;
-        this.startEngineResult = null;
+        this.usedEngineInfo = null;
+        this.webGpuUsed = null;
         this.sceneCallback = new SceneCallback(dotnetInterop);
     }
     // For some reason blazor had here problems with promise return values.
     beginStartEngine(canvas) {
         this.startEngine(canvas);
+    }
+    // needs to be seperated call since dotnet-blazor has problems getting return values from begin start engine or startEngine.
+    async initializeEngine() {
+        let webGpuSupported = await BABYLON.WebGPUEngine.IsSupportedAsync;
+        this.webGpuUsed = webGpuSupported;
+        this.usedEngineInfo = new UsedEngineInfo(webGpuSupported, this.webGpuUsed);
+        return this.usedEngineInfo;
     }
     async startEngine(canvas) {
         if (!canvas)
@@ -21,9 +29,7 @@ class BabylonRenderer {
         canvas.style.height = '100%';
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
-        let webGpuSupported = await BABYLON.WebGPUEngine.IsSupportedAsync;
-        let webGpuUsed = webGpuSupported;
-        if (webGpuUsed) {
+        if (this.webGpuUsed) {
             var eng = new BABYLON.WebGPUEngine(canvas);
             await eng.initAsync();
             this.engine = eng;
@@ -41,15 +47,15 @@ class BabylonRenderer {
         window.addEventListener("resize", function () {
             me.engine.resize();
         });
-        this.startEngineResult = new StartEngineResult(webGpuSupported, webGpuUsed);
-        this.sceneCallback.EngineStartComplete(this.startEngineResult);
-        return this.startEngineResult;
+        // do not call this since dotnet has a problem with webgpu
+        //this.sceneCallback.EngineStartComplete(this.usedEngineInfo!);
+        return this.usedEngineInfo;
     }
-    //public getStartEngineResult(): StartEngineResult {
-    //    if (!this.startEngineResult)
-    //        throw new Error("Engine has not been started")
-    //    return this.startEngineResult;
-    //}
+    getStartEngineResult() {
+        if (!this.usedEngineInfo)
+            throw new Error("Engine has not been started");
+        return this.usedEngineInfo;
+    }
     checkEngineStarted() {
         if (this.engine == null)
             throw new Error("Engine has not been started yet.");
@@ -99,7 +105,7 @@ class BabylonRenderer {
     }
 }
 /// <reference path="babylon-renderer.ts">
-/// <reference path="StartEngineResult.ts">
+/// <reference path="UsedEngineInfo.ts">
 var _blazorRender = null;
 // Blazor does not support static method calling directly, so we need a workarround over window class
 // https://stackoverflow.com/questions/58888300/how-to-call-a-static-javascript-method-from-blazor-c-sharp-code
@@ -122,22 +128,26 @@ var _blazorRender = null;
     window.blazorGetCurrentUrl = function () {
         return window.location.href;
     };
-    window.checkJsObj = function (obj) {
+    // For some reason here blazor needs to register window functions
+    window.getIsWebView = function () {
+        // this variable is set in index.html, thats why ignore the error
+        // @ts-ignore:
+        return isWebView;
     };
 })();
-/// <reference path="babylon-renderer.ts">
-class StartEngineResult {
-    constructor(webGpuSupported, webGpuUsed) {
-        this.webGpuSupported = webGpuSupported;
-        this.webGpuUsed = webGpuUsed;
-    }
-}
-/// <reference path="StartEngineResult.ts">
+/// <reference path="UsedEngineInfo.ts">
 class SceneCallback {
     constructor(dotnetInterop) {
         this.dotnetInterop = dotnetInterop;
     }
     EngineStartComplete(result) {
         return this.dotnetInterop.invokeMethodAsync("EngineStartComplete");
+    }
+}
+/// <reference path="babylon-renderer.ts">
+class UsedEngineInfo {
+    constructor(webGpuSupported, webGpuUsed) {
+        this.webGpuSupported = webGpuSupported;
+        this.webGpuUsed = webGpuUsed;
     }
 }

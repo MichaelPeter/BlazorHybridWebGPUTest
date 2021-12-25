@@ -1,29 +1,28 @@
 ﻿@inject IJSRuntime JS
 
-<label>Click the Spheres to select them. @(_url) </label>
+<label>Click the Spheres to select them. InsideWebView2: @(DisplyBool(_isWebView))</label>
 <label>SupportsWebGPU: @(DisplyBool(_startEngineResult?.WebGpuSupported)) WebGPUUsed: @(DisplyBool(_startEngineResult?.WebGpuUsed)) </label>
 <div style="width: 100%; height: 98vh">
     <Scene EngineStarted="@OnEngineStarted"></Scene>
 </div>
 
 @code {
-    private string? _url = null;
+    private bool? _isWebView = null;
 
-    private StartEngineResult? _startEngineResult = null;
+    private UsedEngineInfo? _startEngineResult = null;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _url = await JS.InvokeAsync<string>("blazorGetCurrentUrl");
-            StateHasChanged();
-        }   
-    }
-
-    private void OnEngineStarted(StartEngineResult startEngineResult)
+    private void OnEngineStarted(UsedEngineInfo startEngineResult)
     {
         _startEngineResult = startEngineResult;
         StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            _isWebView = await JS.InvokeAsync<bool>("getIsWebView");
+        }
     }
 
     private string DisplyBool(bool? b) => b == true ? "Yes" : b == false ? "No" : "Loading...";

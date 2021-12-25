@@ -76,3 +76,4 @@ Attepts to solve the callback with calling the callback from a setTimer() call d
 
 See Also issue here:
 https://github.com/dotnet/aspnetcore/issues/39173
+See branch: **bug/dotnet-6-fails-callbacks**

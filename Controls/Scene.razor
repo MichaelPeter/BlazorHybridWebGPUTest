@@ -12,7 +12,7 @@
     private string? _error;
 
     [Parameter]
-    public EventCallback<StartEngineResult> EngineStarted { get; set; }
+    public EventCallback<UsedEngineInfo> EngineStarted { get; set; }
 
     private IJSObjectReference? _renderEngine;
 
@@ -27,11 +27,17 @@
                 _thisReference = DotNetObjectReference.Create(new SceneCallback(this));
 
                 _renderEngine = await JsRuntime.InvokeAsync<IJSObjectReference>("newRenderEngine", new Object[] { _thisReference });
+                UsedEngineInfo info = await _renderEngine.InvokeAsync<UsedEngineInfo>("initializeEngine");
+
                 //IJSObjectReference resultRef = await _renderEngine.InvokeAsync<IJSObjectReference>("startEngine", new Object[] { _canvasRef });
                 //StartEngineResult result = await _renderEngine.InvokeAsync<StartEngineResult>("startEngine", new Object[] { _canvasRef });
 
                 // For some reason the return value in a promise could not be read from .net so a second method had to be defined
                 await _renderEngine.InvokeVoidAsync("beginStartEngine", new Object[] { _canvasRef });
+
+                // Acutally engine is not yet started since beginStartEngine does not wait but the WebGPU bug forces this.
+                await EngineStartedAsync(info);
+
 
                 //StartEngineResult result = await _renderEngine.InvokeAsync<StartEngineResult>("getStartEngineResult");
 
@@ -51,12 +57,12 @@
         }
     }
 
-    internal async Task EngineStartedAsync(StartEngineResult startResult)
+    internal async Task EngineStartedAsync(UsedEngineInfo usedEngineInfo)
     {
         //StateHasChanged();
         if (EngineStarted.HasDelegate)
         {
-            await EngineStarted.InvokeAsync(startResult);
+            await EngineStarted.InvokeAsync(usedEngineInfo);
         }
     }
 

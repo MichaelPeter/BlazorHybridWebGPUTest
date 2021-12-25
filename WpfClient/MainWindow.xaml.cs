@@ -29,5 +29,19 @@ namespace BlazorHybridWebGPUTest.WpfClient
 
             InitializeComponent();
         }
+
+        private void OnExitClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void OnOpenDeveloperConsole(object sender, RoutedEventArgs e)
+        {
+            BlazorWebView.WebView.CoreWebView2.OpenDevToolsWindow();
+
+            BlazorWebView.WebView.CoreWebView2.v
+        }
+
+        
     }
 }

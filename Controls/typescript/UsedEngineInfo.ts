@@ -1,6 +1,6 @@
 ﻿/// <reference path="babylon-renderer.ts">
 
-class StartEngineResult {
+class UsedEngineInfo {
     constructor(public webGpuSupported: boolean, public webGpuUsed: boolean) {
 
     }

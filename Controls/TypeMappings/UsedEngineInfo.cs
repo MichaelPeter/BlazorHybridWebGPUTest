@@ -11,9 +11,9 @@ namespace BlazorHybridWebGPUTest.Controls.TypeMappings
     /// </summary>
     /// <param name="webGpuSupported"></param>
     /// <param name="webGpuUsed"></param>
-    public class StartEngineResult
+    public class UsedEngineInfo
     {
-        public StartEngineResult()
+        public UsedEngineInfo()
         {
 
         }
