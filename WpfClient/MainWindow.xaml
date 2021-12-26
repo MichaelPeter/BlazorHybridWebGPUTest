@@ -20,6 +20,7 @@
 
             <MenuItem Header="Developer">
                 <MenuItem Header="Open Developer Console" Click="OnOpenDeveloperConsole" />
+                <MenuItem Header="Show Browser Version Info" Click="OnShowBrowserVersionString" />
             </MenuItem>
         </Menu>
 
