@@ -1,0 +1,4 @@
+﻿This dummy makes sure the wwwroot of the wpf project is not empty and the folder will be created when git pull.
+Otherwise erros happens that there is no wwwroot folder.
+
+Can be removed in case of other soltion (csproj folder) or other wwwroot folder.
