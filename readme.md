@@ -12,6 +12,9 @@ is used which starting with 5.0.0.0 preview supports WebGPU with a WebGL fallbac
 
 ## Getting started
 
+- Make sure Visual Studio 2022 is installed and .NET 6.0.1 (.NET 6 requires more or less vs2022)
+- Also make sure node.js is installed, for npm install
+
 - Goto the BlazorHybridWebGPUTest.Controls project
 - execute *npm install* for the typescript depencenties
 
@@ -64,9 +67,13 @@ BlazorHybridWebGPUTest.WpfClient
 ### Maybe Unreal Engine 4/5?
 
 Unreal Engine 4 already supports HTML5 https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/HTML5/
-There are movments to support WebGPU in Unreal Engine 5 or HTML5 in general https://forums.unrealengine.com/t/ue5-and-the-html5-platform/237070
+There are movements to support WebGPU in Unreal Engine 5 or HTML5 in general https://forums.unrealengine.com/t/ue5-and-the-html5-platform/237070
 
 ## Issues with WebGPU
+
+The WebGPU usage resulted in a few roadblocks. By itself it seems to work with babylon.js but other technologies make issues:
+
+#### Issues dotnet.js
 
 When Initalizing the bablyon.js engine with WebGPU and trying to make a callback 
 to Blazor from the same Javascript "Call" or returning a value the dotnet engine runs into an error.
@@ -77,3 +84,30 @@ Attepts to solve the callback with calling the callback from a setTimer() call d
 See Also issue here:
 https://github.com/dotnet/aspnetcore/issues/39173
 See branch: **bug/dotnet-6-fails-callbacks**
+
+#### Issues WebView2 Custom Version
+
+To use WebGPU it is required to have edge canary and have certain edge flags activated.
+
+To use Edge Canary, webview2 has a fixed version deployment where the browser version is deployed with the application setup
+https://docs.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution
+
+Also according to this link, the edge canary binaries can just be copied:
+https://github.com/MicrosoftEdge/WebView2Feedback/issues/639#issuecomment-732351554
+
+The WebView2 engine allows to then set the startup binaries by setting `BrowserExecutableFolder`
+
+WebView2 also allows to pass edge://flags to the started edge instance,
+should look something like: 
+```csharp
+CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-features=enable-unsafe-webgpu
+```
+
+However, with Blazor and WPF WebView it is quite difficult providing custom settings,
+here the research stopped with EnsureCoreWebView2Async() which seems to be called already by setting BlazorWebView.HostPage which calls WebView2.Navigate() and which then seems to somehow cause EnsureCoreWebView2Async() to be called multiple times.
+
+The issue was fixed according to this: https://github.com/MicrosoftEdge/WebView2Feedback/issues/1782
+But it here in this scenario it still makes problems.
+
+Here the issue with BlazorWebView
+https://github.com/dotnet/maui/issues/3861

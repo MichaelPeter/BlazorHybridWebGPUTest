@@ -29,18 +29,27 @@ namespace BlazorHybridWebGPUTest.WpfClient
             Resources.Add("services", serviceCollection.BuildServiceProvider());
 
             InitializeComponent();
-            //SetWebViewEnviromentAsync().Wait(); // Find better was than to wait.
+            SetCustomWebView();
+            //CustomWebView2.RegisterAfterCoreWebLoadedEvent(OnAfterCustomWebView2Initalized);
         }
 
-        private async Task SetWebViewEnviromentAsync()
-        {
-            var envOptions = new CoreWebView2EnvironmentOptions(additionalBrowserArguments: "--enable-features=unsafe-webgpu"); // Check link regarding spelling
-            var env = await CoreWebView2Environment.CreateAsync(options: envOptions);
+        //private void OnAfterCustomWebView2Initalized()
+        //{
+        //    Dirty hack
+        //     Only set host page after beeing loaded, otherwise the setting of host page causes,
+        //     the navigation to start which prevents passing a custom Enviroment variables.
+        //    BlazorWebView.HostPage = "wwwroot/index.html";
+        //}
 
-            // Make shure settings are set: // TODO: Better method than wait.
-            // https://stackoverflow.com/questions/58604537/how-to-change-microsoft-edge-webview2-mdns-behavior-by-calling-createwebview2env
-            // https://stackoverflow.com/questions/67728100/webview2-additionalbrowserarguments-kiosk-printing
-            await BlazorWebView.WebView.EnsureCoreWebView2Async(env);
+        private void SetCustomWebView()
+        {
+            var template = new FrameworkElementFactory(typeof(CustomWebView2), "WebView");
+            BlazorWebView.Template = new ControlTemplate()
+            {
+                // The BlazorWebView defines a control named WebView
+                // Could not be done in xaml since control is just a FrameworkElement and not a control, see xaml for warning
+                VisualTree = template
+            };
         }
 
         private void OnExitClick(object sender, RoutedEventArgs e)
@@ -57,9 +66,7 @@ namespace BlazorHybridWebGPUTest.WpfClient
         {
             string versionString = BlazorWebView.WebView.CoreWebView2.Environment.BrowserVersionString;
 
-
             // To specify minimum version: BlazorWebView.WebView.CoreWebView2.Environment.CompareBrowserVersions
-
             MessageBox.Show($"Browser Version: {versionString}", "Browser Version Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlazorHybridWebGPUTest.WpfClient"
         xmlns:blazor="clr-namespace:Microsoft.AspNetCore.Components.WebView.Wpf;assembly=Microsoft.AspNetCore.Components.WebView.Wpf"
+        xmlns:WpfWebView="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -24,7 +25,14 @@
             </MenuItem>
         </Menu>
 
-        <blazor:BlazorWebView Grid.Row="1" x:Name="BlazorWebView" TabIndex="1" IsTabStop="True" HostPage="wwwroot/index.html" Services="{StaticResource services}">
+        <blazor:BlazorWebView Grid.Row="1" x:Name="BlazorWebView" HostPage="wwwroot/index.html" Services="{StaticResource services}">
+            <!-- Had to be done in code behind since wpf complained TargetType=WpfWebView:WebView2 is not of right type. -->
+            <!--<blazor:BlazorWebView.Template>
+                <ControlTemplate x:Name="WebView" TargetType="WpfWebView:WebView2">
+                    <WpfWebView:WebView2 DefaultBackgroundColor="Green"></WpfWebView:WebView2>
+                </ControlTemplate>
+            </blazor:BlazorWebView.Template>-->
+            
             <blazor:BlazorWebView.RootComponents>
                 <blazor:RootComponent Selector="#app" ComponentType="{x:Type local:WebViewRoot}" />
             </blazor:BlazorWebView.RootComponents>
