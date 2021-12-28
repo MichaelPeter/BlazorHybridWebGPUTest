@@ -1,28 +1,35 @@
 ## About
 
-This is a sample should demonstrate cross usage of WebGPU / WebGL code
+This sample should demonstrate cross usage of WebGPU / WebGL code
 - In a WPF Windows App
 - A Blazor Webassembly Web Application
 
 This is achived over Windows WebView2 and Blazor Hybrid.
-WebView2 uses here preview builds of Edge Canary.
+WebView2 should use preview builds of Edge Canary for WebGPU.
 
-Since WebGPU is a evolving standard for fallback reasons the babylon.js api
+Since WebGPU is a unfinished standard for fallback reasons the babylon.js api
 is used which starting with 5.0.0.0 preview supports WebGPU with a WebGL fallback.
 
 ## Getting started
 
 - Make sure Visual Studio 2022 is installed and .NET 6.0.1 (.NET 6 requires more or less vs2022)
 - Also make sure node.js is installed, for npm install
+
+- Goto the BlazorHybridWebGPUTest.Controls project
+- execute *npm install* for the typescript depencenties
+
+### Enscripten Wasm Compilation
+
+The Enscripten Compilation currently only works in Release Mode and only in the Webbrowser - this needs more investigation.
+
 - Install dotnet wasm-tools to compile native c code to wasm with Emscripten (if not wanted not nessary)
 ```powershell
 dotnet workload install wasm-tools
 ```
 
-**Info:** The native c depedencies are compiled in release mode investigate further.
+If the .Server Project is started in Release Mode the C code can be called.
 
-- Goto the BlazorHybridWebGPUTest.Controls project
-- execute *npm install* for the typescript depencenties
+**Info:** The native c depedencies are compiled in release mode investigate further.
 
 ### A: For Browser Usage:
 
@@ -35,6 +42,7 @@ dotnet workload install wasm-tools
 
 Start Project 
 BlazorHybridWebGPUTest.Server
+
 
 ### B: For WPF Usage:
 
@@ -93,15 +101,21 @@ This was not yet deeply investigated, but does not happen with WebGL.
 
 Attepts to solve the callback with calling the callback from a setTimer() call did not solve the issue.
 
+Also the click events do not come back.
+
 See Also issue here:
 https://github.com/dotnet/aspnetcore/issues/39173
 See branch: **bug/dotnet-6-fails-callbacks**
 
 #### TODO:
 
-- Deploy specific Version of Edge Canary with WebView2 and activate
-  web-gpu - currently blocked by BlazorWebView - see below
-- Compile C code in WPF code to native binary and not webassembly.
+- Find out why dotnet.js fails with WebGPU on callbacks.
+- Deploy specific Version of Edge Canary with WebView2 and activate WebGPU to test WebGPU in WPF, this is currently blocked by BlazorWebView - see below
+- C Compilation with Enscripten:
+    - Currently only the Web Application supports Wasm
+    - Compile C code in WPF code to native binary and not webassembly.
+    - Figure out Why the Native Compilation does not work in Razor class library.
+
 - Use GLSL and WGSL to test them.
 - Add UI Framework for example MatBlazor for Google Material.
 
