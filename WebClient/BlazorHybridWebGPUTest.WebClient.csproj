@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <NativeFileReference Include="Native\Native.c" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 

@@ -114,6 +114,17 @@ var _blazorRender = null;
         return isWebView;
     };
 })();
+/// <reference path="babylonjs">
+class RegisteredMesh {
+    constructor(scene, id, mesh) {
+        this.scene = scene;
+        this.id = id;
+        this.mesh = mesh;
+    }
+    setIsSelected(isSelected) {
+        this.mesh.material = isSelected ? this.scene.selectedMaterial : this.scene.unselectedMaterial;
+    }
+}
 /// <reference path="UsedEngineInfo.ts">
 class SceneCallback {
     constructor(dotnetInterop) {
@@ -124,13 +135,6 @@ class SceneCallback {
     }
     MeshClicked(objectId) {
         return this.dotnetInterop.invokeMethodAsync("MeshClicked", objectId);
-    }
-}
-/// <reference path="babylon-renderer.ts">
-class UsedEngineInfo {
-    constructor(webGpuSupported, webGpuUsed) {
-        this.webGpuSupported = webGpuSupported;
-        this.webGpuUsed = webGpuUsed;
     }
 }
 class SceneContainer {
@@ -205,14 +209,10 @@ class SceneContainer {
     }
     ;
 }
-/// <reference path="babylonjs">
-class RegisteredMesh {
-    constructor(scene, id, mesh) {
-        this.scene = scene;
-        this.id = id;
-        this.mesh = mesh;
-    }
-    setIsSelected(isSelected) {
-        this.mesh.material = isSelected ? this.scene.selectedMaterial : this.scene.unselectedMaterial;
+/// <reference path="babylon-renderer.ts">
+class UsedEngineInfo {
+    constructor(webGpuSupported, webGpuUsed) {
+        this.webGpuSupported = webGpuSupported;
+        this.webGpuUsed = webGpuUsed;
     }
 }

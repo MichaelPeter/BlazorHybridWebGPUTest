@@ -1,6 +1,6 @@
 ## About
 
-This is a sample should demonstrate cross usage of WebGPU code
+This is a sample should demonstrate cross usage of WebGPU / WebGL code
 - In a WPF Windows App
 - A Blazor Webassembly Web Application
 
@@ -14,6 +14,12 @@ is used which starting with 5.0.0.0 preview supports WebGPU with a WebGL fallbac
 
 - Make sure Visual Studio 2022 is installed and .NET 6.0.1 (.NET 6 requires more or less vs2022)
 - Also make sure node.js is installed, for npm install
+- Install dotnet wasm-tools to compile native c code to wasm with Emscripten (if not wanted not nessary)
+```powershell
+dotnet workload install wasm-tools
+```
+
+**Info:** The native c depedencies are compiled in release mode investigate further.
 
 - Goto the BlazorHybridWebGPUTest.Controls project
 - execute *npm install* for the typescript depencenties
@@ -38,7 +44,7 @@ BlazorHybridWebGPUTest.WpfClient
 ### What can be done
 
 - Hold the left mouse key to move the camera
-- Click the spheres to select them.
+- Click the spheres to select them. (Currently not working under WebGPU, see error)
 - In WPF Window FPS from WebGL or WebGPU is displayed.
 
 ## Technologies demonstrated
@@ -117,11 +123,12 @@ should look something like:
 CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-features=enable-unsafe-webgpu
 ```
 
-However, with Blazor and WPF WebView it is quite difficult providing custom settings,
-here the research stopped with EnsureCoreWebView2Async() which seems to be called already by setting BlazorWebView.HostPage which calls WebView2.Navigate() and which then seems to somehow cause EnsureCoreWebView2Async() to be called multiple times.
+However, with Blazor and BlazorWebView it is quite difficult providing custom settings, here the research stopped with EnsureCoreWebView2Async() which seems to be called already by setting BlazorWebView.HostPage which calls WebView2.Navigate() and which then seems to somehow cause EnsureCoreWebView2Async() to be called multiple times.
 
 The issue was fixed according to this: https://github.com/MicrosoftEdge/WebView2Feedback/issues/1782
 But it here in this scenario it still makes problems.
 
-Here the issue with BlazorWebView
+A feature request to implement it in BlazorWebView is here:
 https://github.com/dotnet/maui/issues/3861
+
+But could be worked arround temporary by making a own fork of WPF BlazorWebView - which is a seperate component.

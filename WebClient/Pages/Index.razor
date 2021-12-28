@@ -2,6 +2,21 @@
 
 <PageTitle>Index</PageTitle>
 
+<label>CWasm: @(_cWasm)</label>
 <SceneViewer></SceneViewer>
 
+@code {
+    private string? _cWasm = "Loading";
 
+    protected override void OnInitialized()
+    {
+        try
+        {
+            _cWasm = Native.NativeImport.fact(3).ToString();
+        }
+        catch (Exception ex)
+        {
+            _cWasm = $"Failed: {ex.Message}";
+        }
+    }
+}
