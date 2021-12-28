@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JsRuntime
+﻿@inject IJSRuntime JS
+@inject Services.ISceneViewerCommunicationService SceneCommunication;
 @implements IDisposable
 
 <canvas class="render-canvas" @ref="_canvasRef">
@@ -14,6 +15,12 @@
     [Parameter]
     public EventCallback<UsedEngineInfo> EngineStarted { get; set; }
 
+    [Parameter]
+    public long? SelectedMeshId { get; set; } = null;
+
+    [Parameter]
+    public EventCallback<long?> SelectedMeshIdChanged { get; set; }
+
     private IJSObjectReference? _renderEngine;
 
     private DotNetObjectReference<SceneCallback>? _thisReference;
@@ -26,18 +33,22 @@
             {
                 _thisReference = DotNetObjectReference.Create(new SceneCallback(this));
 
-                _renderEngine = await JsRuntime.InvokeAsync<IJSObjectReference>("newRenderEngine", new Object[] { _thisReference });
+                _renderEngine = await JS.InvokeAsync<IJSObjectReference>("newRenderEngine", new object[] { _thisReference, _canvasRef });
                 UsedEngineInfo info = await _renderEngine.InvokeAsync<UsedEngineInfo>("initializeEngine");
 
                 //IJSObjectReference resultRef = await _renderEngine.InvokeAsync<IJSObjectReference>("startEngine", new Object[] { _canvasRef });
                 //StartEngineResult result = await _renderEngine.InvokeAsync<StartEngineResult>("startEngine", new Object[] { _canvasRef });
 
                 // For some reason the return value in a promise could not be read from .net so a second method had to be defined
-                await _renderEngine.InvokeVoidAsync("beginStartEngine", new Object[] { _canvasRef });
+                await _renderEngine.InvokeVoidAsync("beginStartEngine", new object[] { });
 
                 // Acutally engine is not yet started since beginStartEngine does not wait but the WebGPU bug forces this.
                 await EngineStartedAsync(info);
 
+                SceneCommunication.SetFPSProvider(async () =>
+                {
+                    return await _renderEngine.InvokeAsync<double?>("getFPS");
+                });
 
                 //StartEngineResult result = await _renderEngine.InvokeAsync<StartEngineResult>("getStartEngineResult");
 
@@ -55,6 +66,16 @@
                 _error = ex.ToString();
             }
         }
+    }
+
+    public async Task MeshClicked(long meshId)
+    {
+        // After a object is clicked mark it as selected
+        await _renderEngine!.InvokeVoidAsync("selectMesh", new object[] { meshId });
+
+        SelectedMeshId = meshId;
+        if (SelectedMeshIdChanged.HasDelegate)
+            await SelectedMeshIdChanged.InvokeAsync(meshId);
     }
 
     internal async Task EngineStartedAsync(UsedEngineInfo usedEngineInfo)

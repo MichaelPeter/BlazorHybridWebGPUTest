@@ -35,6 +35,12 @@ BlazorHybridWebGPUTest.Server
 Start Project
 BlazorHybridWebGPUTest.WpfClient
 
+### What can be done
+
+- Hold the left mouse key to move the camera
+- Click the spheres to select them.
+- In WPF Window FPS from WebGL or WebGPU is displayed.
+
 ## Technologies demonstrated
 - ASP.NET Core 6
 - Blazor Webassembly
@@ -84,6 +90,14 @@ Attepts to solve the callback with calling the callback from a setTimer() call d
 See Also issue here:
 https://github.com/dotnet/aspnetcore/issues/39173
 See branch: **bug/dotnet-6-fails-callbacks**
+
+#### TODO:
+
+- Deploy specific Version of Edge Canary with WebView2 and activate
+  web-gpu - currently blocked by BlazorWebView - see below
+- Compile C code in WPF code to native binary and not webassembly.
+- Use GLSL and WGSL to test them.
+- Add UI Framework for example MatBlazor for Google Material.
 
 #### Issues WebView2 Custom Version
 

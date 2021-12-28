@@ -1,13 +1,15 @@
 ﻿@inject IJSRuntime JS
 
 <label>Click the Spheres to select them. InsideWebView2: @(DisplyBool(_isWebView))</label>
-<label>SupportsWebGPU: @(DisplyBool(_startEngineResult?.WebGpuSupported)) WebGPUUsed: @(DisplyBool(_startEngineResult?.WebGpuUsed)) </label>
-<div style="width: 100%; height: 98vh">
-    <Scene EngineStarted="@OnEngineStarted"></Scene>
+<label>SupportsWebGPU: @(DisplyBool(_startEngineResult?.WebGpuSupported)) WebGPUUsed: @(DisplyBool(_startEngineResult?.WebGpuUsed)) SelectedSphere: @(DisplayObjectId(_selectedMeshId))</label>
+<div style="width: 100%; height: 95vh">
+    <Scene @bind-SelectedMeshId="_selectedMeshId" EngineStarted="@OnEngineStarted"></Scene>
 </div>
 
 @code {
     private bool? _isWebView = null;
+
+    private long? _selectedMeshId = null;
 
     private UsedEngineInfo? _startEngineResult = null;
 
@@ -26,4 +28,6 @@
     }
 
     private string DisplyBool(bool? b) => b == true ? "Yes" : b == false ? "No" : "Loading...";
+
+    private string DisplayObjectId(long? objId) => objId != null ? $"{objId}" : "None";
 }

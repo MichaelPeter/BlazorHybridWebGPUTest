@@ -4,10 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlazorHybridWebGPUTest.WpfClient"
-        xmlns:blazor="clr-namespace:Microsoft.AspNetCore.Components.WebView.Wpf;assembly=Microsoft.AspNetCore.Components.WebView.Wpf"
-        xmlns:WpfWebView="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="650" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -25,17 +23,6 @@
             </MenuItem>
         </Menu>
 
-        <blazor:BlazorWebView Grid.Row="1" x:Name="BlazorWebView" HostPage="wwwroot/index.html" Services="{StaticResource services}">
-            <!-- Had to be done in code behind since wpf complained TargetType=WpfWebView:WebView2 is not of right type. -->
-            <!--<blazor:BlazorWebView.Template>
-                <ControlTemplate x:Name="WebView" TargetType="WpfWebView:WebView2">
-                    <WpfWebView:WebView2 DefaultBackgroundColor="Green"></WpfWebView:WebView2>
-                </ControlTemplate>
-            </blazor:BlazorWebView.Template>-->
-            
-            <blazor:BlazorWebView.RootComponents>
-                <blazor:RootComponent Selector="#app" ComponentType="{x:Type local:WebViewRoot}" />
-            </blazor:BlazorWebView.RootComponents>
-        </blazor:BlazorWebView>
+        <local:SceneViewer x:Name="SceneViewer" Grid.Row="1" />
     </Grid>
 </Window>

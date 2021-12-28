@@ -13,8 +13,8 @@ var _blazorRender: BabylonRenderer | null  = null;
     //        return result;
     //    }
     //};
-    (<any>window).newRenderEngine = function (dotnetInterop: any): BabylonRenderer {
-        return new BabylonRenderer(dotnetInterop);
+    (<any>window).newRenderEngine = function (dotnetInterop: any, canvas: HTMLCanvasElement): BabylonRenderer {
+        return new BabylonRenderer(dotnetInterop, canvas);
     };
     //(<any>window).getFps = function (): number {
     //    if (_blazorRender == null)

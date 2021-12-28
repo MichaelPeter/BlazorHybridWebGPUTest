@@ -21,5 +21,11 @@ namespace BlazorHybridWebGPUTest.Controls.TypeMappings
         {
             await Scene.EngineStartedAsync(new UsedEngineInfo());
         }
+
+        [JSInvokable]
+        public async Task MeshClicked(long objectId)
+        {
+            await Scene.MeshClicked(objectId);
+        }
     }
 }
