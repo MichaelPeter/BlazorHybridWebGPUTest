@@ -16,6 +16,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BlazorHybridWebGPUTest.Controls;
 using BlazorHybridWebGPUTest.Controls.Services;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace BlazorHybridWebGPUTest.WpfClient
 {
@@ -31,6 +33,14 @@ namespace BlazorHybridWebGPUTest.WpfClient
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
             serviceCollection.UseSceneViewer(SceneCommunication);
+
+            //// For debugging rendering
+            //serviceCollection.AddLogging((logBuilder) =>
+            //{
+            //    logBuilder.AddDebug();
+            //    logBuilder.SetMinimumLevel(LogLevel.Debug);
+            //});
+
             Resources.Add("services", serviceCollection.BuildServiceProvider());
 
             InitializeComponent();
