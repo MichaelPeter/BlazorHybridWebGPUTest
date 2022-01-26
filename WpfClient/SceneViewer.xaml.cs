@@ -62,6 +62,8 @@ namespace BlazorHybridWebGPUTest.WpfClient
 
         private void SetCustomWebView()
         {
+            BlazorWebView.InitializingWebView += OnInitializingWebView;
+
             var template = new FrameworkElementFactory(typeof(CustomWebView2), "WebView");
             BlazorWebView.Template = new ControlTemplate()
             {
@@ -69,6 +71,19 @@ namespace BlazorHybridWebGPUTest.WpfClient
                 // Could not be done in xaml since control is just a FrameworkElement and not a control, see xaml for warning
                 VisualTree = template
             };
+        }
+
+        private void OnInitializingWebView(object sender, WebViewInitEventArgs e)
+        {
+            // WebGPU support WebView2: https://github.com/MicrosoftEdge/WebView2Feedback/issues/1285
+
+            // Will tell WebView2 to use the least stable runtime
+            Environment.SetEnvironmentVariable("WEBVIEW2_RELEASE_CHANNEL_PREFERENCE", "1");
+
+            //e.CoreWebView2BrowserExecutableFolder = @"D:\Projects\BlazorHybridWebGPUTest\WpfClient\EdgeFixedVersion";
+            e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-features=enable-unsafe-webgpu";
+            //e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-features=unsafe-webgpu";
+            //e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-unsafe-webgpu-service"; // --enable-experimental-web-platform-features 
         }
     }
 }

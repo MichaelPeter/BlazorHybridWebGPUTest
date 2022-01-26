@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EdgeVersions\**" />
+    <Content Remove="EdgeVersions\**" />
+    <EmbeddedResource Remove="EdgeVersions\**" />
+    <None Remove="EdgeVersions\**" />
+    <Page Remove="EdgeVersions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="WebViewRoot.razor" />
     <None Remove="_Imports.razor" />
   </ItemGroup>
@@ -19,13 +27,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="6.0.101-preview.11.2349" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1054.31" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Controls\BlazorHybridWebGPUTest.Controls.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Components.WebView.WebView2">
+      <HintPath>CustomBlazorWebView\Microsoft.AspNetCore.Components.WebView.WebView2.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Components.WebView.Wpf">
+      <HintPath>CustomBlazorWebView\Microsoft.AspNetCore.Components.WebView.Wpf.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
