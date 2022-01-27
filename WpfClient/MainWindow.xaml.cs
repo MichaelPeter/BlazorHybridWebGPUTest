@@ -33,7 +33,16 @@ namespace BlazorHybridWebGPUTest.WpfClient
             timer.AutoReset = true;
             timer.Elapsed += async (obj, e) =>
             {
-                double? fps = await SceneViewer.SceneCommunication.RequestFPSAsync();
+                double? fps;
+                try
+                {
+                     fps = await SceneViewer.SceneCommunication.RequestFPSAsync();
+                }
+                // In using WebGPU the renderer object seems to be null till started.
+                catch (Exception)
+                {
+                    fps = null;
+                }
 
                 // Only dispatch after retrieving the fps.
                 await this.Dispatcher.InvokeAsync(() =>
