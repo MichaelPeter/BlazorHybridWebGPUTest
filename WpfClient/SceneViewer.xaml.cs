@@ -65,7 +65,7 @@ namespace BlazorHybridWebGPUTest.WpfClient
 
             // Will tell WebView2 to use the least stable runtime
             Environment.SetEnvironmentVariable("WEBVIEW2_RELEASE_CHANNEL_PREFERENCE", "1");
-            e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-unsafe-webgpu";
+            //e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-unsafe-webgpu";
 
             //e.CoreWebView2BrowserExecutableFolder = @"D:\Projects\BlazorHybridWebGPUTest\WpfClient\EdgeFixedVersion";
 

@@ -64,6 +64,7 @@
             catch (Exception ex)
             {
                 _error = ex.ToString();
+                StateHasChanged();
             }
         }
     }
