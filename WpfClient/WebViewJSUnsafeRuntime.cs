@@ -37,7 +37,8 @@ namespace BlazorHybridWebGPUTest.WpfClient
 
         public void WebViewInvoke(string methodName, string arg)
         {
-            // Idea was to invoike  BeginInvokeJS of JsRuntime since this directly invokes IPCSender.BeginInvokeJS
+            // Idea was to invoike BeginInvokeJS of JsRuntime since this directly invokes IPCSender.BeginInvokeJS, but method is protected
+            // _jsRuntime.BeginInvokeJS()
             throw new NotImplementedException();
         }
     }
