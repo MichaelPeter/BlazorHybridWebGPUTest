@@ -1,7 +1,9 @@
 ﻿@inject IJSRuntime JS
+@inject IJSUnsafeRuntime JSUnsafe
 
 <label>Click the Spheres to select them. InsideWebView2: @(DisplyBool(_isWebView))</label>
 <label>SupportsWebGPU: @(DisplyBool(_startEngineResult?.WebGpuSupported)) WebGPUUsed: @(DisplyBool(_startEngineResult?.WebGpuUsed)) SelectedSphere: @(DisplayObjectId(_selectedMeshId))</label>
+<button @onclick="@OnJSInteropPerformanceTest">JSIntPerf</button>
 <div style="width: 100%; height: 95vh">
     <Scene @bind-SelectedMeshId="_selectedMeshId" EngineStarted="@OnEngineStarted"></Scene>
 </div>

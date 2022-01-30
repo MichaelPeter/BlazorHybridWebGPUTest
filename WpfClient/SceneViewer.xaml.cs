@@ -33,6 +33,7 @@ namespace BlazorHybridWebGPUTest.WpfClient
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
             serviceCollection.UseSceneViewer(SceneCommunication);
+            serviceCollection.AddSingleton<IJSUnsafeRuntime, WebViewJSUnsafeRuntime>();
 
             //// For debugging rendering
             //serviceCollection.AddLogging((logBuilder) =>
