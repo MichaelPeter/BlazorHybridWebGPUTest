@@ -25,10 +25,25 @@ namespace BlazorHybridWebGPUTest.WebClient
 
         public void InvokeUnmarshalled(string methodName, string arg)
         {
-            _jSUnmarshalledRuntime.InvokeUnmarshalled<string, string>(methodName, arg);
+          var arr = new byte[] { 1, 2, 3 };
+
+          _jSUnmarshalledRuntime.InvokeUnmarshalled<byte[], string>(methodName, arr);
+
+
         }
 
-        public void WebViewInvoke(string methodName, string arg)
+		public object InvokeUnmarshalledGetObject(string methodName)
+		{
+      _jSUnmarshalledRuntime.InvokeUnmarshalled<long>(methodName);
+      return null!;
+    }
+
+		public void InvokeUnmarshalledPassObject(string methodName, object obj)
+		{
+      _jSUnmarshalledRuntime.InvokeUnmarshalled<IJSObjectReference ,object>(methodName, (IJSObjectReference)obj);
+    }
+
+		public void WebViewInvoke(string methodName, string arg)
         {
             throw new NotImplementedException();
         }

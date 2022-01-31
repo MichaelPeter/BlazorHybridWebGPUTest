@@ -27,6 +27,10 @@ class BabylonRenderer {
         return this.usedEngineInfo;
     }
 
+    public PassMyself(renderer: BabylonRenderer): void {
+        console.log(renderer.webGpuUsed);
+    }
+
     public async startEngine(): Promise<UsedEngineInfo> {
 
         let canvas = this._canvas;

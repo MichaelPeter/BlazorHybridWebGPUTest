@@ -13,9 +13,22 @@ var _blazorRender: BabylonRenderer | null  = null;
     //        return result;
     //    }
     //};
+
+
     (<any>window).newRenderEngine = function (dotnetInterop: any, canvas: HTMLCanvasElement): BabylonRenderer {
-        return new BabylonRenderer(dotnetInterop, canvas);
+        var engine = new BabylonRenderer(dotnetInterop, canvas);
+        _blazorRender = engine;
+        return engine;
     };
+
+    (<any>window).getCurrentRenderEngine = function (): BabylonRenderer {
+        return _blazorRender!;
+    };
+
+    (<any>window).passRenderEngine = function (engine: any) {
+        console.log(engine);
+    };
+
     //(<any>window).getFps = function (): number {
     //    if (_blazorRender == null)
     //        throw new Error("Engine not yet initialized");
@@ -38,16 +51,26 @@ var _blazorRender: BabylonRenderer | null  = null;
         return input
     };
 
-    (<any>window).jsInteropPerformanceTestUnmarshalled = function (rawInput: any): void {
+    (<any>window).jsInteropPerformanceTestUnmarshalled = function (binaryData: any): void {
         // Source: https://www.meziantou.net/optimizing-js-interop-in-a-blazor-webassembly-application.htm
         // Not documented and may change in future versions of mono, use it at your own risk...
         // The current source code of the BINDING functions: https://github.com/mono/mono/blob/b6ef72c244bd33623d231ff05bc3d120ad36b4e9/sdks/wasm/src/binding_support.js
         // These functions are defined by _framework/dotnet.<version>.js, which is imported by _framework/blazor.webassembly.js
 
+
         // @ts-ignore:
-        const name = BINDING.conv_string(rawInput);       // Convert the handle to a JS string
+        const dataPtr = Blazor.platform.getArrayEntryPtr(binaryData, 0, 4);
         // @ts-ignore:
-        return BINDING.js_to_mono_obj(rawInput); // Convert a JS object to a mono object that you can use in the .NET code
+        const length = Blazor.platform.getArrayLength(binaryData);
+        // @ts-ignore:
+        var binaryDataCast = new Int8Array(Module.HEAPU8.buffer, dataPtr, length);
+
+        binaryDataCast[0] = 0;
+
+        // @ts-ignore:
+        //const name = BINDING.conv_string(rawInput);       // Convert the handle to a JS string
+        // @ts-ignore:
+        //return BINDING.js_to_mono_obj(name); // Convert a JS object to a mono object that you can use in the .NET code
     };
 
 })(); 

@@ -16,5 +16,9 @@ namespace BlazorHybridWebGPUTest.Controls
         bool IsWebView { get;  }
 
         void WebViewInvoke(string methodName, string arg);
-    }
+
+      object InvokeUnmarshalledGetObject(string methodName);
+
+      void InvokeUnmarshalledPassObject(string methodName, object obj);
+  }
 }

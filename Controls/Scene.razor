@@ -1,6 +1,9 @@
-﻿@inject IJSRuntime JS
+﻿@using Microsoft.JSInterop.Implementation
+@using System.Diagnostics
+@inject IJSRuntime JS
 @inject Services.ISceneViewerCommunicationService SceneCommunication;
 @implements IDisposable
+@inject IJSUnsafeRuntime JSUnsafe;
 
 <canvas class="render-canvas" @ref="_canvasRef">
 
@@ -31,10 +34,31 @@
         {
             try
             {
+                // https://github.com/dotnet/aspnetcore/blob/a450cb69b5e4549f5515cdb057a68771f56cefd7/src/Components/WebAssembly/JSInterop/src/WebAssemblyJSRuntime.cs
+
                 _thisReference = DotNetObjectReference.Create(new SceneCallback(this));
 
                 _renderEngine = await JS.InvokeAsync<IJSObjectReference>("newRenderEngine", new object[] { _thisReference, _canvasRef });
+
+                string typeName = _renderEngine.GetType().FullName!;
                 UsedEngineInfo info = await _renderEngine.InvokeAsync<UsedEngineInfo>("initializeEngine");
+
+                var eInProc = (JSInProcessObjectReference)_renderEngine;
+                var sw = new Stopwatch();
+                 
+
+                sw.Start();
+                for (int i = 0; i < 100000; i++)
+                {
+                    eInProc.InvokeVoid("PassMyself", new object[] { 12 /*_renderEngine*/ });
+                }
+                sw.Stop();
+                await JS.InvokeVoidAsync("alert", new object[] { $"ExecTime: {sw.ElapsedMilliseconds}" });
+
+
+                //JSUnsafe.InvokeUnmarshalledPassObject("passRenderEngine", _renderEngine);
+
+                //getCurrentRenderEngine
 
                 //IJSObjectReference resultRef = await _renderEngine.InvokeAsync<IJSObjectReference>("startEngine", new Object[] { _canvasRef });
                 //StartEngineResult result = await _renderEngine.InvokeAsync<StartEngineResult>("startEngine", new Object[] { _canvasRef });

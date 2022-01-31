@@ -41,5 +41,15 @@ namespace BlazorHybridWebGPUTest.WpfClient
             // _jsRuntime.BeginInvokeJS()
             throw new NotImplementedException();
         }
-    }
+
+		public object InvokeUnmarshalledGetObject(string methodName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void InvokeUnmarshalledPassObject(string methodName, object obj)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
