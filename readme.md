@@ -1,11 +1,12 @@
 ## About
 
-This sample should demonstrate cross usage of WebGPU / WebGL code
-- In a WPF Windows App
+This sample should demonstrate cross usage of WebGPU / WebGL code with Blazor / Blazor Hybrid
+- In a WPF Windows App (using Blazor Hybrid)
 - A Blazor Webassembly Web Application
 
-This is achived over Windows WebView2 and Blazor Hybrid.
+This is achived over Windows WebView2 and Blazor Hybrid and some Typescript code.
 WebView2 should use preview builds of Edge Canary for WebGPU.
+- Also there was a custom build of Blazor Hybrid used, to allow usage of Edge Canary and Custom Flags.
 
 Since WebGPU is a unfinished standard for fallback reasons the babylon.js api
 is used which starting with 5.0.0.0 preview supports WebGPU with a WebGL fallback.
