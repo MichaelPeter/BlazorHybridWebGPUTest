@@ -17,6 +17,7 @@ is used which starting with 5.0.0.0 preview supports WebGPU with a WebGL fallbac
 
 - Goto the BlazorHybridWebGPUTest.Controls project
 - execute *npm install* for the typescript depencenties
+- execute *npm run build* build tsc and put babylon to the output directory.
 
 ### Enscripten Wasm Compilation
 

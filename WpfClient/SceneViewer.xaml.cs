@@ -45,7 +45,6 @@ namespace BlazorHybridWebGPUTest.WpfClient
             Resources.Add("services", serviceCollection.BuildServiceProvider());
 
             InitializeComponent();
-            SetCustomWebView();
             //CustomWebView2.RegisterAfterCoreWebLoadedEvent(OnAfterCustomWebView2Initalized);
         }
 
@@ -61,15 +60,20 @@ namespace BlazorHybridWebGPUTest.WpfClient
         //    BlazorWebView.HostPage = "wwwroot/index.html";
         //}
 
-        private void SetCustomWebView()
+        private void OnInitializingWebView(object sender, WebViewInitEventArgs e)
         {
-            var template = new FrameworkElementFactory(typeof(CustomWebView2), "WebView");
-            BlazorWebView.Template = new ControlTemplate()
-            {
-                // The BlazorWebView defines a control named WebView
-                // Could not be done in xaml since control is just a FrameworkElement and not a control, see xaml for warning
-                VisualTree = template
-            };
+            // WebGPU support WebView2: https://github.com/MicrosoftEdge/WebView2Feedback/issues/1285
+
+            // Will tell WebView2 to use the least stable runtime
+            Environment.SetEnvironmentVariable("WEBVIEW2_RELEASE_CHANNEL_PREFERENCE", "1");
+
+            // Activate line to render in webgpu instead webgl if edge canary is installed.
+            e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-unsafe-webgpu";
+
+
+            // Chrome https://stackoverflow.com/questions/69780367/how-to-make-webgpu-run-in-chrome-canary-97
+            // Chromium sourcecode activate webgpu by cmd: https://github.com/chromium/chromium/blob/b9156d882c9bb6d77995bb3d84ca25cc326247a6/gpu/command_buffer/service/service_utils.cc#L158
+            // Chromium has switch:   return Contains(switches_, switch_string);
         }
     }
 }
