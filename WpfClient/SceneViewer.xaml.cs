@@ -65,16 +65,12 @@ namespace BlazorHybridWebGPUTest.WpfClient
 
             // Will tell WebView2 to use the least stable runtime
             Environment.SetEnvironmentVariable("WEBVIEW2_RELEASE_CHANNEL_PREFERENCE", "1");
-            //e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-unsafe-webgpu";
 
-            //e.CoreWebView2BrowserExecutableFolder = @"D:\Projects\BlazorHybridWebGPUTest\WpfClient\EdgeFixedVersion";
-
-            //e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-features=unsafe-webgpu";
-            //e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-unsafe-webgpu-service"; // --enable-experimental-web-platform-features 
+            // Activate line to render in webgpu instead webgl if edge canary is installed.
+            e.CoreWebView2EnvironmentOptions.AdditionalBrowserArguments = "--enable-unsafe-webgpu";
 
 
             // Chrome https://stackoverflow.com/questions/69780367/how-to-make-webgpu-run-in-chrome-canary-97
-
             // Chromium sourcecode activate webgpu by cmd: https://github.com/chromium/chromium/blob/b9156d882c9bb6d77995bb3d84ca25cc326247a6/gpu/command_buffer/service/service_utils.cc#L158
             // Chromium has switch:   return Contains(switches_, switch_string);
         }

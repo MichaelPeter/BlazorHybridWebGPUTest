@@ -6,13 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "postbuild": "cpx node_modules/babylonjs/{babylon.js,babylon.max.js,babylon.max.js.map} wwwroot/js/"
+    "postbuild": "cpx-fixed node_modules/babylonjs/{babylon.js,babylon.max.js,babylon.max.js.map} wwwroot/js/"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babylonjs": "5.0.0-beta.9",
-    "babylonjs-materials": "5.0.0-beta.9"
+    "babylonjs": "5.0.0-alpha.65",
+    "babylonjs-materials": "5.0.0-alpha.65"
   },
   "devDependencies": {
     "cpx-fixed": "1.6.0"
