@@ -68,6 +68,10 @@ class BabylonRenderer {
         return this.usedEngineInfo!;
     }
 
+    public jsInteropPerformanceTest(input: string) {
+        // do nothing just check execution
+    }
+
     private _selectedMesh: RegisteredMesh | null = null;
 
     public selectMesh(meshId: number) {
